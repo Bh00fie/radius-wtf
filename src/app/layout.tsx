@@ -78,12 +78,14 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      {gaMeasurementId && <GoogleAnalytics gaId={gaMeasurementId} />}
+      <body className="min-h-full flex flex-col">
+        {children}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        {gaMeasurementId && <GoogleAnalytics gaId={gaMeasurementId} />}
+      </body>
     </html>
   );
 }

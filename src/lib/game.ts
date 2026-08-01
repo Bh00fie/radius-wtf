@@ -64,11 +64,21 @@ function mulberry32(seed: number): () => number {
   };
 }
 
+function radiusFromSeed(seed: string): number {
+  const rand = mulberry32(cyrb53(seed) >>> 0);
+  return Math.round(RADIUS_MIN + rand() * (RADIUS_MAX - RADIUS_MIN));
+}
+
 export function generatePuzzle(dateStr: string): Puzzle {
-  const seed = cyrb53(dateStr) >>> 0;
-  const rand = mulberry32(seed);
-  const radius = Math.round(RADIUS_MIN + rand() * (RADIUS_MAX - RADIUS_MIN));
-  return { date: dateStr, dayIndex: dayIndexFor(dateStr), radius };
+  return { date: dateStr, dayIndex: dayIndexFor(dateStr), radius: radiusFromSeed(dateStr) };
+}
+
+/**
+ * A throwaway puzzle for debug/practice mode — not tied to a calendar date,
+ * so it can be regenerated on demand without touching the real daily puzzle.
+ */
+export function generatePracticePuzzle(seed: string): Puzzle {
+  return { date: seed, dayIndex: 0, radius: radiusFromSeed(seed) };
 }
 
 export function scoreGuess(guess: number, trueRadius: number): number {

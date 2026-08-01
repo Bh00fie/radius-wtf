@@ -8,6 +8,7 @@ interface AlreadyPlayedViewProps {
   puzzle: Puzzle;
   result: DailyResult;
   stats: PlayerStats;
+  practiceMode?: boolean;
 }
 
 function msUntilNextLocalMidnight(): number {
@@ -24,20 +25,26 @@ function formatCountdown(ms: number): string {
   return `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
 }
 
-export function AlreadyPlayedView({ puzzle, result, stats }: AlreadyPlayedViewProps) {
+export function AlreadyPlayedView({ puzzle, result, stats, practiceMode }: AlreadyPlayedViewProps) {
   const [remaining, setRemaining] = useState<number | null>(null);
 
   useEffect(() => {
+    if (practiceMode) return;
     // Date-based countdown must start after mount to avoid an SSR/client mismatch.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setRemaining(msUntilNextLocalMidnight());
     const id = setInterval(() => setRemaining(msUntilNextLocalMidnight()), 1000);
     return () => clearInterval(id);
-  }, []);
+  }, [practiceMode]);
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <DailySummary puzzle={puzzle} result={result} streak={stats.currentStreak} />
+      <DailySummary
+        puzzle={puzzle}
+        result={result}
+        streak={stats.currentStreak}
+        practiceMode={practiceMode}
+      />
       {remaining !== null && (
         <p className="text-xs text-neutral-400">Next puzzle in {formatCountdown(remaining)}</p>
       )}

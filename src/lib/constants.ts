@@ -2,6 +2,13 @@
 export const MAX_GUESSES = 4;
 
 /**
+ * Only true when NEXT_PUBLIC_DEBUG_MODE=true is set at build time — never set
+ * in production. Reveals a practice-mode panel for generating unlimited
+ * throwaway puzzles without touching real daily stats/streak.
+ */
+export const DEBUG_MODE = process.env.NEXT_PUBLIC_DEBUG_MODE === "true";
+
+/**
  * Canonical production URL, used for metadata/sitemap/robots. Override with
  * NEXT_PUBLIC_SITE_URL in Netlify's env vars if a custom domain replaces this
  * default later.

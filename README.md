@@ -34,6 +34,14 @@ Open [http://localhost:3000](http://localhost:3000).
 Copy `.env.local.example` to `.env.local` and set `NEXT_PUBLIC_GA_MEASUREMENT_ID` to enable Google
 Analytics locally (optional — the app runs fine without it).
 
+### Debug/practice mode
+
+Set `NEXT_PUBLIC_DEBUG_MODE=true` (requires a dev server restart, since `NEXT_PUBLIC_*` vars are
+inlined at build time) to reveal a debug panel with a "New practice puzzle" button. It generates
+unlimited random puzzles on demand — for testing gameplay/UI without waiting for the next calendar
+day — without ever writing to real stats/history/streak in `localStorage`. Leave it unset (the
+default) everywhere else, including Netlify's production env vars, so regular players never see it.
+
 ## Testing
 
 ```bash

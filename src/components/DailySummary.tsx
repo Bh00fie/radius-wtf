@@ -8,13 +8,15 @@ interface DailySummaryProps {
   puzzle: Puzzle;
   result: DailyResult;
   streak: number;
+  practiceMode?: boolean;
 }
 
-export function DailySummary({ puzzle, result, streak }: DailySummaryProps) {
+export function DailySummary({ puzzle, result, streak, practiceMode }: DailySummaryProps) {
   return (
     <div className="flex flex-col items-center gap-4 text-center">
       <h2 className="text-lg font-semibold">
-        Radius #{puzzle.dayIndex} — the answer was {result.radius} units
+        {practiceMode ? "Practice round" : `Radius #${puzzle.dayIndex}`} — the answer was{" "}
+        {result.radius} units
       </h2>
 
       <RadiusVisual trueRadius={result.radius} revealed />
@@ -25,7 +27,7 @@ export function DailySummary({ puzzle, result, streak }: DailySummaryProps) {
           <ScoreBandDot key={i} band={scoreBand(scoreGuess(g, result.radius))} className="h-4 w-4" />
         ))}
       </div>
-      <p className="text-sm text-neutral-500">🔥 Streak: {streak}</p>
+      {!practiceMode && <p className="text-sm text-neutral-500">🔥 Streak: {streak}</p>}
     </div>
   );
 }
