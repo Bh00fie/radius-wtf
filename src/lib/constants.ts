@@ -23,7 +23,7 @@ export const GUESS_MAX = 999;
 export const VIEWBOX_SIZE = 200;
 
 /** Length, in game units, of the fixed scale-bar legend shown every round. */
-export const SCALE_BAR_UNITS = 10;
+export const SCALE_BAR_UNITS = 20;
 
 /** A guess this far off (as a fraction of the true radius) scores 0. */
 export const MAX_PERCENT_ERROR = 0.5;
