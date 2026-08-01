@@ -11,6 +11,14 @@ export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://radiusgame.
 export const RADIUS_MIN = 15;
 export const RADIUS_MAX = 85;
 
+/**
+ * Bounds for the guess input itself — deliberately wider than
+ * RADIUS_MIN/RADIUS_MAX so the input's min/max don't leak the true answer
+ * range to anyone inspecting the page.
+ */
+export const GUESS_MIN = 1;
+export const GUESS_MAX = 999;
+
 /** SVG viewBox is a fixed square of this size (game units == viewBox units). */
 export const VIEWBOX_SIZE = 200;
 

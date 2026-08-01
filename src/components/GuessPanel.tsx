@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { RadiusVisual } from "./RadiusVisual";
 import { scoreBand, scoreGuess } from "@/lib/game";
-import { MAX_GUESSES, RADIUS_MAX, RADIUS_MIN } from "@/lib/constants";
+import { GUESS_MAX, GUESS_MIN, MAX_GUESSES } from "@/lib/constants";
 
 interface GuessPanelProps {
   trueRadius: number;
@@ -12,12 +12,25 @@ interface GuessPanelProps {
 }
 
 export function GuessPanel({ trueRadius, guesses, onGuess }: GuessPanelProps) {
-  const [value, setValue] = useState(Math.round((RADIUS_MIN + RADIUS_MAX) / 2));
+  const [inputValue, setInputValue] = useState("");
   const guessesLeft = MAX_GUESSES - guesses.length;
 
-  const clamp = (raw: number) => {
-    if (Number.isNaN(raw)) return value;
-    return Math.max(RADIUS_MIN, Math.min(RADIUS_MAX, Math.round(raw)));
+  const handleChange = (raw: string) => {
+    const digitsOnly = raw.replace(/\D/g, "");
+    if (digitsOnly === "") {
+      setInputValue("");
+      return;
+    }
+    setInputValue(String(Math.min(GUESS_MAX, Number(digitsOnly))));
+  };
+
+  const parsedValue = inputValue === "" ? null : Number(inputValue);
+  const canSubmit = parsedValue !== null && parsedValue >= GUESS_MIN;
+
+  const submit = () => {
+    if (parsedValue === null || !canSubmit) return;
+    onGuess(parsedValue);
+    setInputValue("");
   };
 
   return (
@@ -49,19 +62,23 @@ export function GuessPanel({ trueRadius, guesses, onGuess }: GuessPanelProps) {
       <label className="flex items-center gap-2 text-sm">
         Radius guess
         <input
-          type="number"
-          value={value}
-          min={RADIUS_MIN}
-          max={RADIUS_MAX}
-          onChange={(e) => setValue(clamp(Number(e.target.value)))}
+          type="text"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          value={inputValue}
+          onChange={(e) => handleChange(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") submit();
+          }}
           className="w-20 rounded border border-neutral-300 px-2 py-1 text-center dark:border-neutral-700 dark:bg-neutral-900"
         />
         units
       </label>
       <button
         type="button"
-        onClick={() => onGuess(value)}
-        className="rounded-full bg-neutral-900 px-6 py-2 text-sm font-medium text-white dark:bg-neutral-100 dark:text-neutral-900"
+        onClick={submit}
+        disabled={!canSubmit}
+        className="rounded-full bg-neutral-900 px-6 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-40 dark:bg-neutral-100 dark:text-neutral-900"
       >
         Guess ({guessesLeft} left)
       </button>
