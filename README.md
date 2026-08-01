@@ -21,7 +21,6 @@ consecutive daily wins.
 - Progress/streaks persist in `localStorage` only — no accounts yet. `src/lib/storage.ts` defines a
   `StatsStorage` interface so a future Supabase-backed adapter can be swapped in without touching
   game logic, once accounts are added.
-- `src/components/AdSlot.tsx` reserves space for a future Google AdSense unit.
 
 ## Getting started
 
