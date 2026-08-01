@@ -2,7 +2,7 @@ import { SCALE_BAR_UNITS, VIEWBOX_SIZE } from "@/lib/constants";
 
 const CENTER = VIEWBOX_SIZE / 2;
 const LEGEND_X = 20;
-const LEGEND_Y = VIEWBOX_SIZE - 22;
+const LEGEND_Y = VIEWBOX_SIZE - 15;
 
 interface RadiusVisualProps {
   trueRadius: number;
@@ -34,7 +34,7 @@ export function RadiusVisual({ trueRadius, revealed }: RadiusVisualProps) {
           y2={LEGEND_Y + 4}
         />
       </g>
-      <text x={LEGEND_X} y={LEGEND_Y + 17} fontSize={14} className="fill-neutral-400">
+      <text x={LEGEND_X} y={LEGEND_Y + 13} fontSize={7} className="fill-neutral-400">
         {SCALE_BAR_UNITS} units
       </text>
 
