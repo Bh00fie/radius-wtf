@@ -72,5 +72,6 @@ Deploys to [Netlify](https://www.netlify.com/) via `@netlify/plugin-nextjs` (see
 In the Netlify site's environment variables, set:
 
 - `NEXT_PUBLIC_GA_MEASUREMENT_ID` — enables Google Analytics in production.
-- `NEXT_PUBLIC_SITE_URL` — your real deployed URL (e.g. `https://radius-wtf.netlify.app` or a
-  custom domain), used for SEO metadata, the sitemap, and robots.txt.
+- `NEXT_PUBLIC_SITE_URL` — only needed if a custom domain replaces the default
+  (`https://radiusgame.netlify.app`, hardcoded in `src/lib/constants.ts`); used for SEO metadata,
+  the sitemap, and robots.txt.
