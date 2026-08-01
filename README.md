@@ -1,4 +1,4 @@
-# radius.wtf
+# radiusgame
 
 A daily, no-login browser game in the spirit of [angle.wtf](https://angle.wtf/) and Wordle —
 instead of guessing an angle or a word, you guess a circle's **radius**, in abstract "game units,"
@@ -66,7 +66,8 @@ consecutive-day, skipped-day, and same-day-replay cases.
 To actually get indexed by Google (can't be automated — needs your Google account):
 
 1. Go to [Google Search Console](https://search.google.com/search-console) and add the site as a
-   property (the "URL prefix" method with your Netlify URL is simplest).
+   property using your real domain (a "Domain" property covers `radiusgame.com` and all its
+   subdomains/protocols; "URL prefix" works too if you'd rather verify just `https://radiusgame.com`).
 2. Verify ownership — Search Console will offer an HTML meta tag or DNS TXT record option; a DNS
    TXT record on a custom domain is the least fragile if you have one.
 3. Once verified, submit `https://<your-site>/sitemap.xml` under Sitemaps in the Search Console
@@ -80,6 +81,13 @@ Deploys to [Netlify](https://www.netlify.com/) via `@netlify/plugin-nextjs` (see
 In the Netlify site's environment variables, set:
 
 - `NEXT_PUBLIC_GA_MEASUREMENT_ID` — enables Google Analytics in production.
-- `NEXT_PUBLIC_SITE_URL` — only needed if a custom domain replaces the default
-  (`https://radiusgame.netlify.app`, hardcoded in `src/lib/constants.ts`); used for SEO metadata,
-  the sitemap, and robots.txt.
+- `NEXT_PUBLIC_SITE_URL` — only needed if the domain differs from the default
+  (`https://radiusgame.com`, hardcoded in `src/lib/constants.ts`); used for SEO metadata, the
+  sitemap, and robots.txt.
+
+Custom domain (`radiusgame.com`): in Netlify, go to **Domain management** → **Add a domain** and
+enter it. Netlify shows either a set of DNS records to add at your registrar, or lets you delegate
+to Netlify DNS instead — either way, follow its on-screen instructions, then wait for DNS
+propagation and automatic SSL provisioning (usually minutes to a few hours). Once the domain
+resolves to the Netlify site, set `NEXT_PUBLIC_SITE_URL=https://radiusgame.com` in Netlify's env
+vars and redeploy.

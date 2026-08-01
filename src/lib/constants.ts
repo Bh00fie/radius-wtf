@@ -13,7 +13,7 @@ export const DEBUG_MODE = process.env.NEXT_PUBLIC_DEBUG_MODE === "true";
  * NEXT_PUBLIC_SITE_URL in Netlify's env vars if a custom domain replaces this
  * default later.
  */
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://radiusgame.netlify.app";
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://radiusgame.com";
 
 export const RADIUS_MIN = 15;
 export const RADIUS_MAX = 85;

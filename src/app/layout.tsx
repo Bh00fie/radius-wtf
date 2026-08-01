@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const TITLE = "radius.wtf — guess the radius";
+const TITLE = "radiusgame — guess the radius";
 const DESCRIPTION =
   "A daily browser puzzle: guess a circle's radius in up to 4 tries, build a streak, and come back tomorrow for a new one.";
 
@@ -30,14 +30,14 @@ export const metadata: Metadata = {
     "angle.wtf",
     "wordle for shapes",
   ],
-  applicationName: "radius.wtf",
+  applicationName: "radiusgame",
   robots: { index: true, follow: true },
   alternates: { canonical: "/" },
   openGraph: {
     title: TITLE,
     description: DESCRIPTION,
     url: SITE_URL,
-    siteName: "radius.wtf",
+    siteName: "radiusgame",
     type: "website",
   },
   twitter: {
@@ -57,7 +57,7 @@ export const viewport: Viewport = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  name: "radius.wtf",
+  name: "radiusgame",
   url: SITE_URL,
   description: DESCRIPTION,
   applicationCategory: "Game",

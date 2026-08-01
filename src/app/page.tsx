@@ -28,7 +28,7 @@ export default function Home() {
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col items-center gap-6 px-4 py-10">
       <header className="flex w-full items-center justify-between">
-        <h1 className="text-xl font-bold tracking-tight">radius.wtf</h1>
+        <h1 className="text-xl font-bold tracking-tight">radiusgame</h1>
         <StreakBadge stats={stats} />
       </header>
 

@@ -31,7 +31,7 @@ export default function Image() {
         >
           <div style={{ width: 12, height: 12, borderRadius: "50%", backgroundColor: "#171717" }} />
         </div>
-        <div style={{ fontSize: 76, fontWeight: 700, color: "#171717" }}>radius.wtf</div>
+        <div style={{ fontSize: 76, fontWeight: 700, color: "#171717" }}>radiusgame</div>
         <div style={{ fontSize: 32, color: "#737373", marginTop: 16 }}>
           Guess the radius. Daily.
         </div>
