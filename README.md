@@ -10,9 +10,10 @@ consecutive daily wins.
 
 - Everything renders in a fixed SVG `viewBox`, so all math happens in stable game units instead of
   raw pixels (see `src/lib/constants.ts`).
-- Each day's puzzle (one circle) is generated deterministically from the UTC date
-  (`src/lib/game.ts`), so every player gets the same radius, and it rolls over to a new one at UTC
-  midnight.
+- Each day's puzzle (one circle) is generated deterministically from the player's local calendar
+  date (`src/lib/game.ts`), so it rolls over to a new circle at each player's own midnight rather
+  than a shared UTC midnight. Players on the same calendar date get the same radius; players in
+  different timezones may be a day apart from each other.
 - The true circle is visible the whole time — there's no drag-to-match overlay, since that made
   matching trivial by eye. You type a numeric radius guess; each guess shows a score band and a
   "too high"/"too low" direction cue. You win by guessing the exact radius within

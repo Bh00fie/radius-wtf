@@ -20,8 +20,8 @@ export const SCALE_BAR_UNITS = 10;
 /** A guess this far off (as a fraction of the true radius) scores 0. */
 export const MAX_PERCENT_ERROR = 0.5;
 
-/** Launch date (UTC) used to compute the daily puzzle number, Wordle-style. */
-export const LAUNCH_DATE_UTC = "2026-08-01";
+/** Launch date used to compute the daily puzzle number, Wordle-style. */
+export const LAUNCH_DATE = "2026-08-01";
 
 export interface ScoreBand {
   label: string;

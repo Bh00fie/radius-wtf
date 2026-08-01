@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { buildDailyResult, generatePuzzle, utcDateString } from "@/lib/game";
+import { buildDailyResult, generatePuzzle, localDateString } from "@/lib/game";
 import { getStorageAdapter } from "@/lib/storage";
 import { MAX_GUESSES } from "@/lib/constants";
 import type { DailyResult, PlayerStats, Puzzle } from "@/lib/types";
@@ -25,7 +25,7 @@ export function useGamePuzzle(): GamePuzzleState {
 
   useEffect(() => {
     const storage = getStorageAdapter();
-    const dateStr = utcDateString(new Date());
+    const dateStr = localDateString(new Date());
     const todaysPuzzle = generatePuzzle(dateStr);
     const currentStats = storage.getStats();
 

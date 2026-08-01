@@ -1,5 +1,5 @@
 import {
-  LAUNCH_DATE_UTC,
+  LAUNCH_DATE,
   MAX_PERCENT_ERROR,
   RADIUS_MAX,
   RADIUS_MIN,
@@ -10,23 +10,31 @@ import type { DailyResult, PlayerStats, Puzzle } from "./types";
 
 const MS_PER_DAY = 86_400_000;
 
-/** Formats a Date as a UTC "YYYY-MM-DD" string — the deterministic daily key. */
-export function utcDateString(date: Date): string {
-  return date.toISOString().slice(0, 10);
+/** Formats a Date as a "YYYY-MM-DD" string in the player's local timezone — the
+ * deterministic daily key. Using local (not UTC) fields means the puzzle rolls
+ * over at each player's own midnight, not a shared UTC midnight. */
+export function localDateString(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 /** Alias kept for call sites that think in terms of "today's puzzle seed". */
 export function getDailySeed(date: Date): string {
-  return utcDateString(date);
+  return localDateString(date);
 }
 
+// Date-only arithmetic below treats "YYYY-MM-DD" as a calendar date, not an
+// instant — parsing/formatting as UTC noon avoids DST-related off-by-ones.
+
 export function dayIndexFor(dateStr: string): number {
-  const ms = Date.parse(`${dateStr}T00:00:00Z`) - Date.parse(`${LAUNCH_DATE_UTC}T00:00:00Z`);
-  return Math.floor(ms / MS_PER_DAY) + 1;
+  const ms = Date.parse(`${dateStr}T12:00:00Z`) - Date.parse(`${LAUNCH_DATE}T12:00:00Z`);
+  return Math.round(ms / MS_PER_DAY) + 1;
 }
 
 export function previousDateString(dateStr: string): string {
-  const ms = Date.parse(`${dateStr}T00:00:00Z`) - MS_PER_DAY;
+  const ms = Date.parse(`${dateStr}T12:00:00Z`) - MS_PER_DAY;
   return new Date(ms).toISOString().slice(0, 10);
 }
 

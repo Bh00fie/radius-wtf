@@ -10,9 +10,9 @@ interface AlreadyPlayedViewProps {
   stats: PlayerStats;
 }
 
-function msUntilNextUtcMidnight(): number {
+function msUntilNextLocalMidnight(): number {
   const now = new Date();
-  const next = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1));
+  const next = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
   return next.getTime() - now.getTime();
 }
 
@@ -30,8 +30,8 @@ export function AlreadyPlayedView({ puzzle, result, stats }: AlreadyPlayedViewPr
   useEffect(() => {
     // Date-based countdown must start after mount to avoid an SSR/client mismatch.
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setRemaining(msUntilNextUtcMidnight());
-    const id = setInterval(() => setRemaining(msUntilNextUtcMidnight()), 1000);
+    setRemaining(msUntilNextLocalMidnight());
+    const id = setInterval(() => setRemaining(msUntilNextLocalMidnight()), 1000);
     return () => clearInterval(id);
   }, []);
 

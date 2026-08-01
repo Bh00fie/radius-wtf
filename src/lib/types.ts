@@ -1,7 +1,7 @@
 export interface Puzzle {
-  /** UTC date string "YYYY-MM-DD" identifying this puzzle. */
+  /** Local "YYYY-MM-DD" date string identifying this puzzle for the player. */
   date: string;
-  /** Days since LAUNCH_DATE_UTC, shown as "Radius #N". */
+  /** Days since LAUNCH_DATE, shown as "Radius #N". */
   dayIndex: number;
   /** The single true radius for the day, in game units. */
   radius: number;
