@@ -47,6 +47,7 @@ export function RadiusVisual({ trueRadius, revealed }: RadiusVisualProps) {
         className={revealed ? "text-emerald-500" : "text-neutral-500"}
         strokeWidth={revealed ? 2 : 1.5}
       />
+      <circle cx={CENTER} cy={CENTER} r={2} className="fill-neutral-900 dark:fill-neutral-100" />
     </svg>
   );
 }
