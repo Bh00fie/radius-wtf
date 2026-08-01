@@ -1,6 +1,7 @@
 import type { DailyResult, Puzzle } from "@/lib/types";
 import { scoreBand, scoreGuess } from "@/lib/game";
 import { RadiusVisual } from "./RadiusVisual";
+import { ScoreBandDot } from "./ScoreBandDot";
 import { MAX_GUESSES } from "@/lib/constants";
 
 interface DailySummaryProps {
@@ -19,9 +20,9 @@ export function DailySummary({ puzzle, result, streak }: DailySummaryProps) {
       <RadiusVisual trueRadius={result.radius} revealed />
 
       <p className="text-4xl font-bold">{result.won ? `${result.guesses.length}/${MAX_GUESSES}` : `X/${MAX_GUESSES}`}</p>
-      <div className="flex gap-1 text-2xl">
+      <div className="flex gap-2">
         {result.guesses.map((g, i) => (
-          <span key={i}>{scoreBand(scoreGuess(g, result.radius)).emoji}</span>
+          <ScoreBandDot key={i} band={scoreBand(scoreGuess(g, result.radius))} className="h-4 w-4" />
         ))}
       </div>
       <p className="text-sm text-neutral-500">🔥 Streak: {streak}</p>

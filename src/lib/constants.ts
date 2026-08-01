@@ -33,14 +33,15 @@ export const LAUNCH_DATE = "2026-08-01";
 
 export interface ScoreBand {
   label: string;
-  emoji: string;
+  /** Tailwind background-color class for the band's indicator dot. */
+  color: string;
   min: number;
 }
 
 export const SCORE_BANDS: ScoreBand[] = [
-  { label: "Perfect", emoji: "🟩", min: 90 },
-  { label: "Great", emoji: "🟢", min: 70 },
-  { label: "Good", emoji: "🟡", min: 45 },
-  { label: "Off", emoji: "🟠", min: 20 },
-  { label: "Way Off", emoji: "🟥", min: 0 },
+  { label: "Perfect", color: "bg-emerald-500", min: 90 },
+  { label: "Great", color: "bg-lime-500", min: 70 },
+  { label: "Good", color: "bg-amber-400", min: 45 },
+  { label: "Off", color: "bg-orange-500", min: 20 },
+  { label: "Way Off", color: "bg-red-500", min: 0 },
 ];

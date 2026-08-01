@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { RadiusVisual } from "./RadiusVisual";
+import { ScoreBandDot } from "./ScoreBandDot";
 import { scoreBand, scoreGuess } from "@/lib/game";
 import { GUESS_MAX, GUESS_MIN, MAX_GUESSES } from "@/lib/constants";
 
@@ -49,8 +50,9 @@ export function GuessPanel({ trueRadius, guesses, onGuess }: GuessPanelProps) {
               g === trueRadius ? "🎯 Correct!" : g > trueRadius ? "Too high ⬇" : "Too low ⬆";
             return (
               <li key={i} className="flex items-center justify-between text-sm">
-                <span>
-                  {band.emoji} {g} units
+                <span className="flex items-center gap-2">
+                  <ScoreBandDot band={band} />
+                  {g} units
                 </span>
                 <span className="text-neutral-500">{direction}</span>
               </li>
