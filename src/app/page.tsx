@@ -27,8 +27,7 @@ export default function Home() {
       ) : (
         <>
           <p className="text-center text-sm text-neutral-500">
-            Drag the dashed circle&rsquo;s handle (or type a number) to match the hidden
-            circle&rsquo;s radius, using the ruler as your reference.
+            Guess the radius of the circle below, in units, using the ruler as your reference.
           </p>
           <RoundHUD
             key={currentRoundIndex}

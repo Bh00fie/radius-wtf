@@ -6,18 +6,21 @@ const LEGEND_X = 20;
 const LEGEND_Y = VIEWBOX_SIZE - 15;
 
 interface RadiusVisualProps {
+  trueRadius: number;
   revealed?: boolean;
-  trueRadius?: number;
   children?: ReactNode;
 }
 
 /**
  * Renders the fixed-viewBox SVG stage: a scale-bar legend that is identical
- * every round (the player's absolute unit reference), plus the true circle
- * once revealed. The interactive guess circle is passed in as `children` so
- * it shares this same coordinate system without prop-drilling the geometry.
+ * every round (the player's absolute unit reference), plus the true circle —
+ * visible from the start of the round, since that's the thing being guessed.
+ * `revealed` only recolors it (neutral while guessing, green once submitted)
+ * as a "confirmed" cue. The interactive guess circle is passed in as
+ * `children` so it shares this same coordinate system without prop-drilling
+ * the geometry.
  */
-export function RadiusVisual({ revealed, trueRadius, children }: RadiusVisualProps) {
+export function RadiusVisual({ trueRadius, revealed, children }: RadiusVisualProps) {
   return (
     <svg
       viewBox={`0 0 ${VIEWBOX_SIZE} ${VIEWBOX_SIZE}`}
@@ -39,17 +42,15 @@ export function RadiusVisual({ revealed, trueRadius, children }: RadiusVisualPro
         {SCALE_BAR_UNITS} units
       </text>
 
-      {revealed && trueRadius != null && (
-        <circle
-          cx={CENTER}
-          cy={CENTER}
-          r={trueRadius}
-          fill="none"
-          stroke="currentColor"
-          className="text-emerald-500"
-          strokeWidth={2}
-        />
-      )}
+      <circle
+        cx={CENTER}
+        cy={CENTER}
+        r={trueRadius}
+        fill="none"
+        stroke="currentColor"
+        className={revealed ? "text-emerald-500" : "text-neutral-500"}
+        strokeWidth={revealed ? 2 : 1.5}
+      />
 
       {children}
     </svg>

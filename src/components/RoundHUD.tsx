@@ -31,7 +31,7 @@ export function RoundHUD({ roundIndex, totalRounds, trueRadius, onSubmit }: Roun
         Round {roundIndex + 1} of {totalRounds}
       </p>
 
-      <RadiusVisual revealed={submitted} trueRadius={submitted ? trueRadius : undefined}>
+      <RadiusVisual trueRadius={trueRadius} revealed={submitted}>
         <GuessCircle value={guess} onChange={setGuess} disabled={submitted} />
       </RadiusVisual>
 
