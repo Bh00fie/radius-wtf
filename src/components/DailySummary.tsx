@@ -1,7 +1,6 @@
 import type { DailyResult, Puzzle } from "@/lib/types";
 import { scoreBand, scoreGuess } from "@/lib/game";
 import { RadiusVisual } from "./RadiusVisual";
-import { ShareButton } from "./ShareButton";
 import { MAX_GUESSES } from "@/lib/constants";
 
 interface DailySummaryProps {
@@ -26,7 +25,6 @@ export function DailySummary({ puzzle, result, streak }: DailySummaryProps) {
         ))}
       </div>
       <p className="text-sm text-neutral-500">🔥 Streak: {streak}</p>
-      <ShareButton puzzle={puzzle} result={result} streak={streak} />
     </div>
   );
 }

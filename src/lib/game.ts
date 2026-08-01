@@ -82,18 +82,6 @@ export function buildDailyResult(date: string, puzzle: Puzzle, guesses: number[]
   };
 }
 
-export function formatShareText(
-  puzzle: Puzzle,
-  result: DailyResult,
-  streak: number,
-  siteUrl = "https://radius-wtf.netlify.app",
-): string {
-  const grid = result.guesses.map((g) => scoreBand(scoreGuess(g, result.radius)).emoji).join("");
-  const attempts = result.won ? `${result.guesses.length}/4` : "X/4";
-  const lines = [`Radius #${puzzle.dayIndex} ${attempts}`, grid, `🔥 Streak: ${streak}`, siteUrl];
-  return lines.join("\n");
-}
-
 export function createInitialStats(): PlayerStats {
   return { version: 2, lastPlayedDate: null, currentStreak: 0, maxStreak: 0, history: {} };
 }
