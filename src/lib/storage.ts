@@ -1,7 +1,7 @@
 import { applyDailyResult, createInitialStats } from "./game";
 import type { DailyResult, PlayerStats } from "./types";
 
-const STORAGE_KEY = "radius-wtf:stats:v1";
+const STORAGE_KEY = "radius-wtf:stats:v2";
 
 /**
  * Persistence boundary for player stats. Today this is backed by localStorage
@@ -22,7 +22,7 @@ export class LocalStorageAdapter implements StatsStorage {
     if (!raw) return createInitialStats();
     try {
       const parsed = JSON.parse(raw) as PlayerStats;
-      if (parsed.version !== 1) return createInitialStats();
+      if (parsed.version !== 2) return createInitialStats();
       return parsed;
     } catch {
       return createInitialStats();

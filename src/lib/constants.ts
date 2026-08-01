@@ -1,4 +1,5 @@
-export const ROUNDS_PER_DAY = 5;
+/** One circle per day; this many numeric guesses at it before the day is over. */
+export const MAX_GUESSES = 4;
 
 export const RADIUS_MIN = 15;
 export const RADIUS_MAX = 85;

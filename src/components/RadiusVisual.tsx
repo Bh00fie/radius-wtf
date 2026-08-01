@@ -1,4 +1,3 @@
-import type { ReactNode } from "react";
 import { SCALE_BAR_UNITS, VIEWBOX_SIZE } from "@/lib/constants";
 
 const CENTER = VIEWBOX_SIZE / 2;
@@ -7,24 +6,21 @@ const LEGEND_Y = VIEWBOX_SIZE - 15;
 
 interface RadiusVisualProps {
   trueRadius: number;
+  /** Recolors the circle green once the day's puzzle is over (won or out of guesses). */
   revealed?: boolean;
-  children?: ReactNode;
 }
 
 /**
  * Renders the fixed-viewBox SVG stage: a scale-bar legend that is identical
- * every round (the player's absolute unit reference), plus the true circle —
- * visible from the start of the round, since that's the thing being guessed.
- * `revealed` only recolors it (neutral while guessing, green once submitted)
- * as a "confirmed" cue. The interactive guess circle is passed in as
- * `children` so it shares this same coordinate system without prop-drilling
- * the geometry.
+ * every day (the player's absolute unit reference), plus the day's true
+ * circle — visible from the first guess, since that's the thing being
+ * estimated. There's no draggable overlay; the player states a number.
  */
-export function RadiusVisual({ trueRadius, revealed, children }: RadiusVisualProps) {
+export function RadiusVisual({ trueRadius, revealed }: RadiusVisualProps) {
   return (
     <svg
       viewBox={`0 0 ${VIEWBOX_SIZE} ${VIEWBOX_SIZE}`}
-      className="mx-auto w-full max-w-sm touch-none select-none"
+      className="mx-auto w-full max-w-sm select-none"
       role="img"
       aria-label="Radius guessing canvas"
     >
@@ -51,8 +47,6 @@ export function RadiusVisual({ trueRadius, revealed, children }: RadiusVisualPro
         className={revealed ? "text-emerald-500" : "text-neutral-500"}
         strokeWidth={revealed ? 2 : 1.5}
       />
-
-      {children}
     </svg>
   );
 }

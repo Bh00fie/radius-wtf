@@ -1,22 +1,17 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { buildDailyResult, generatePuzzle, scoreGuess, utcDateString } from "@/lib/game";
+import { buildDailyResult, generatePuzzle, utcDateString } from "@/lib/game";
 import { getStorageAdapter } from "@/lib/storage";
+import { MAX_GUESSES } from "@/lib/constants";
 import type { DailyResult, PlayerStats, Puzzle } from "@/lib/types";
-
-export interface RoundResult {
-  guess: number;
-  score: number;
-}
 
 interface GamePuzzleState {
   loading: boolean;
   puzzle: Puzzle | null;
   stats: PlayerStats | null;
-  alreadyPlayed: boolean;
-  currentRoundIndex: number;
-  roundResults: RoundResult[];
+  guesses: number[];
+  gameOver: boolean;
   dailyResult: DailyResult | null;
   submitGuess: (guess: number) => void;
 }
@@ -25,9 +20,7 @@ export function useGamePuzzle(): GamePuzzleState {
   const [loading, setLoading] = useState(true);
   const [puzzle, setPuzzle] = useState<Puzzle | null>(null);
   const [stats, setStats] = useState<PlayerStats | null>(null);
-  const [alreadyPlayed, setAlreadyPlayed] = useState(false);
-  const [currentRoundIndex, setCurrentRoundIndex] = useState(0);
-  const [roundResults, setRoundResults] = useState<RoundResult[]>([]);
+  const [guesses, setGuesses] = useState<number[]>([]);
   const [dailyResult, setDailyResult] = useState<DailyResult | null>(null);
 
   useEffect(() => {
@@ -42,46 +35,40 @@ export function useGamePuzzle(): GamePuzzleState {
     setPuzzle(todaysPuzzle);
     setStats(currentStats);
 
-    if (storage.hasPlayedToday(dateStr)) {
-      setAlreadyPlayed(true);
-      setDailyResult(currentStats.history[dateStr]);
+    const existing = currentStats.history[dateStr];
+    if (existing) {
+      setGuesses(existing.guesses);
+      setDailyResult(existing);
     }
     setLoading(false);
   }, []);
 
   const submitGuess = useCallback(
     (guess: number) => {
-      if (!puzzle) return;
-      const round = puzzle.rounds[currentRoundIndex];
-      const score = scoreGuess(guess, round.radius);
-      const nextResults = [...roundResults, { guess, score }];
-      setRoundResults(nextResults);
+      if (!puzzle || dailyResult) return;
+      const nextGuesses = [...guesses, guess];
+      setGuesses(nextGuesses);
 
-      if (nextResults.length === puzzle.rounds.length) {
+      const won = guess === puzzle.radius;
+      const outOfGuesses = nextGuesses.length >= MAX_GUESSES;
+
+      if (won || outOfGuesses) {
         const storage = getStorageAdapter();
-        const result = buildDailyResult(
-          puzzle.date,
-          puzzle,
-          nextResults.map((r) => r.guess),
-        );
+        const result = buildDailyResult(puzzle.date, puzzle, nextGuesses);
         const nextStats = storage.saveDailyResult(result);
         setStats(nextStats);
         setDailyResult(result);
-        setAlreadyPlayed(true);
-      } else {
-        setCurrentRoundIndex(currentRoundIndex + 1);
       }
     },
-    [puzzle, currentRoundIndex, roundResults],
+    [puzzle, guesses, dailyResult],
   );
 
   return {
     loading,
     puzzle,
     stats,
-    alreadyPlayed,
-    currentRoundIndex,
-    roundResults,
+    guesses,
+    gameOver: dailyResult !== null,
     dailyResult,
     submitGuess,
   };

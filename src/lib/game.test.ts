@@ -43,13 +43,13 @@ describe("generatePuzzle", () => {
   it("is deterministic for the same date", () => {
     const a = generatePuzzle("2026-08-01");
     const b = generatePuzzle("2026-08-01");
-    expect(a.rounds.map((r) => r.radius)).toEqual(b.rounds.map((r) => r.radius));
+    expect(a.radius).toBe(b.radius);
   });
 
-  it("produces different puzzles for different dates", () => {
+  it("produces a different radius for a different date", () => {
     const a = generatePuzzle("2026-08-01");
     const b = generatePuzzle("2026-08-02");
-    expect(a.rounds.map((r) => r.radius)).not.toEqual(b.rounds.map((r) => r.radius));
+    expect(a.radius).not.toBe(b.radius);
   });
 
   it("computes dayIndex relative to the launch date", () => {
@@ -58,56 +58,76 @@ describe("generatePuzzle", () => {
   });
 });
 
+describe("buildDailyResult", () => {
+  it("wins if any guess exactly matches the radius", () => {
+    const puzzle = generatePuzzle("2026-08-01");
+    const result = buildDailyResult("2026-08-01", puzzle, [10, 20, puzzle.radius]);
+    expect(result.won).toBe(true);
+  });
+
+  it("loses if no guess matches within the allotted guesses", () => {
+    const puzzle = generatePuzzle("2026-08-01");
+    const wrongGuesses = [1, 2, 3, 4].map((n) => (puzzle.radius + n > 85 ? puzzle.radius - n : puzzle.radius + n));
+    const result = buildDailyResult("2026-08-01", puzzle, wrongGuesses);
+    expect(result.won).toBe(false);
+  });
+});
+
 describe("applyDailyResult streak logic", () => {
-  it("starts a streak at 1 on the first play", () => {
+  it("starts a streak at 1 on a win", () => {
     const stats = createInitialStats();
     const puzzle = generatePuzzle("2026-08-01");
-    const result = buildDailyResult("2026-08-01", puzzle, [50, 50, 50, 50, 50]);
+    const result = buildDailyResult("2026-08-01", puzzle, [puzzle.radius]);
     const next = applyDailyResult(stats, result);
     expect(next.currentStreak).toBe(1);
     expect(next.maxStreak).toBe(1);
   });
 
-  it("increments the streak on consecutive days", () => {
+  it("does not start a streak on a loss", () => {
+    const stats = createInitialStats();
+    const puzzle = generatePuzzle("2026-08-01");
+    const result = buildDailyResult("2026-08-01", puzzle, [1, 2, 3, 4]);
+    const next = applyDailyResult(stats, result);
+    expect(next.currentStreak).toBe(0);
+    expect(next.maxStreak).toBe(0);
+  });
+
+  it("increments the streak on consecutive winning days", () => {
     let stats = createInitialStats();
-    const day1 = buildDailyResult("2026-08-01", generatePuzzle("2026-08-01"), [50, 50, 50, 50, 50]);
-    stats = applyDailyResult(stats, day1);
-    const day2 = buildDailyResult("2026-08-02", generatePuzzle("2026-08-02"), [50, 50, 50, 50, 50]);
-    stats = applyDailyResult(stats, day2);
+    const puzzle1 = generatePuzzle("2026-08-01");
+    stats = applyDailyResult(stats, buildDailyResult("2026-08-01", puzzle1, [puzzle1.radius]));
+    const puzzle2 = generatePuzzle("2026-08-02");
+    stats = applyDailyResult(stats, buildDailyResult("2026-08-02", puzzle2, [puzzle2.radius]));
     expect(stats.currentStreak).toBe(2);
     expect(stats.maxStreak).toBe(2);
   });
 
-  it("resets the streak after a skipped day", () => {
+  it("resets the streak after a loss", () => {
     let stats = createInitialStats();
-    const day1 = buildDailyResult("2026-08-01", generatePuzzle("2026-08-01"), [50, 50, 50, 50, 50]);
-    stats = applyDailyResult(stats, day1);
-    const day3 = buildDailyResult("2026-08-03", generatePuzzle("2026-08-03"), [50, 50, 50, 50, 50]);
-    stats = applyDailyResult(stats, day3);
+    const puzzle1 = generatePuzzle("2026-08-01");
+    stats = applyDailyResult(stats, buildDailyResult("2026-08-01", puzzle1, [puzzle1.radius]));
+    const puzzle2 = generatePuzzle("2026-08-02");
+    stats = applyDailyResult(stats, buildDailyResult("2026-08-02", puzzle2, [1, 2, 3, 4]));
+    expect(stats.currentStreak).toBe(0);
+    expect(stats.maxStreak).toBe(1);
+  });
+
+  it("resets the streak after a skipped day even if won", () => {
+    let stats = createInitialStats();
+    const puzzle1 = generatePuzzle("2026-08-01");
+    stats = applyDailyResult(stats, buildDailyResult("2026-08-01", puzzle1, [puzzle1.radius]));
+    const puzzle3 = generatePuzzle("2026-08-03");
+    stats = applyDailyResult(stats, buildDailyResult("2026-08-03", puzzle3, [puzzle3.radius]));
     expect(stats.currentStreak).toBe(1);
     expect(stats.maxStreak).toBe(1);
   });
 
-  it("keeps maxStreak after a later reset", () => {
+  it("recording the same day twice overwrites that day's entry", () => {
     let stats = createInitialStats();
-    const day1 = buildDailyResult("2026-08-01", generatePuzzle("2026-08-01"), [50, 50, 50, 50, 50]);
-    stats = applyDailyResult(stats, day1);
-    const day2 = buildDailyResult("2026-08-02", generatePuzzle("2026-08-02"), [50, 50, 50, 50, 50]);
-    stats = applyDailyResult(stats, day2);
-    expect(stats.maxStreak).toBe(2);
-    const day5 = buildDailyResult("2026-08-05", generatePuzzle("2026-08-05"), [50, 50, 50, 50, 50]);
-    stats = applyDailyResult(stats, day5);
-    expect(stats.currentStreak).toBe(1);
-    expect(stats.maxStreak).toBe(2);
-  });
-
-  it("recording the same day twice overwrites that day's entry without changing the streak twice", () => {
-    let stats = createInitialStats();
-    const day1 = buildDailyResult("2026-08-01", generatePuzzle("2026-08-01"), [50, 50, 50, 50, 50]);
-    stats = applyDailyResult(stats, day1);
-    const day1Replay = buildDailyResult("2026-08-01", generatePuzzle("2026-08-01"), [10, 10, 10, 10, 10]);
-    stats = applyDailyResult(stats, day1Replay);
-    expect(stats.currentStreak).toBe(1);
-    expect(stats.history["2026-08-01"].guesses).toEqual([10, 10, 10, 10, 10]);
+    const puzzle = generatePuzzle("2026-08-01");
+    stats = applyDailyResult(stats, buildDailyResult("2026-08-01", puzzle, [puzzle.radius]));
+    stats = applyDailyResult(stats, buildDailyResult("2026-08-01", puzzle, [1, 2, 3, 4]));
+    expect(stats.history["2026-08-01"].won).toBe(false);
+    expect(stats.currentStreak).toBe(0);
   });
 });

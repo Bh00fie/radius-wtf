@@ -2,14 +2,13 @@
 
 import { useGamePuzzle } from "@/hooks/useGamePuzzle";
 import { StreakBadge } from "@/components/StreakBadge";
-import { RoundHUD } from "@/components/RoundHUD";
+import { GuessPanel } from "@/components/GuessPanel";
 import { AlreadyPlayedView } from "@/components/AlreadyPlayedView";
 import { AdSlot } from "@/components/AdSlot";
-import { ROUNDS_PER_DAY } from "@/lib/constants";
+import { MAX_GUESSES } from "@/lib/constants";
 
 export default function Home() {
-  const { loading, puzzle, stats, alreadyPlayed, currentRoundIndex, dailyResult, submitGuess } =
-    useGamePuzzle();
+  const { loading, puzzle, stats, guesses, gameOver, dailyResult, submitGuess } = useGamePuzzle();
 
   if (loading || !puzzle || !stats) {
     return <main className="min-h-screen" />;
@@ -22,20 +21,15 @@ export default function Home() {
         <StreakBadge stats={stats} />
       </header>
 
-      {alreadyPlayed && dailyResult ? (
+      {gameOver && dailyResult ? (
         <AlreadyPlayedView puzzle={puzzle} result={dailyResult} stats={stats} />
       ) : (
         <>
           <p className="text-center text-sm text-neutral-500">
-            Guess the radius of the circle below, in units, using the ruler as your reference.
+            Guess the radius of today&rsquo;s circle, in units, using the ruler as your
+            reference. You have {MAX_GUESSES} guesses.
           </p>
-          <RoundHUD
-            key={currentRoundIndex}
-            roundIndex={currentRoundIndex}
-            totalRounds={ROUNDS_PER_DAY}
-            trueRadius={puzzle.rounds[currentRoundIndex].radius}
-            onSubmit={submitGuess}
-          />
+          <GuessPanel trueRadius={puzzle.radius} guesses={guesses} onGuess={submitGuess} />
         </>
       )}
 

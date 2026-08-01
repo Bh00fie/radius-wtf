@@ -3,7 +3,6 @@ import {
   MAX_PERCENT_ERROR,
   RADIUS_MAX,
   RADIUS_MIN,
-  ROUNDS_PER_DAY,
   SCORE_BANDS,
   type ScoreBand,
 } from "./constants";
@@ -60,10 +59,8 @@ function mulberry32(seed: number): () => number {
 export function generatePuzzle(dateStr: string): Puzzle {
   const seed = cyrb53(dateStr) >>> 0;
   const rand = mulberry32(seed);
-  const rounds = Array.from({ length: ROUNDS_PER_DAY }, () => ({
-    radius: Math.round(RADIUS_MIN + rand() * (RADIUS_MAX - RADIUS_MIN)),
-  }));
-  return { date: dateStr, dayIndex: dayIndexFor(dateStr), rounds };
+  const radius = Math.round(RADIUS_MIN + rand() * (RADIUS_MAX - RADIUS_MIN));
+  return { date: dateStr, dayIndex: dayIndexFor(dateStr), radius };
 }
 
 export function scoreGuess(guess: number, trueRadius: number): number {
@@ -76,21 +73,12 @@ export function scoreBand(score: number): ScoreBand {
   return SCORE_BANDS.find((band) => score >= band.min) ?? SCORE_BANDS[SCORE_BANDS.length - 1];
 }
 
-export function buildDailyResult(
-  date: string,
-  puzzle: Puzzle,
-  guesses: number[],
-): DailyResult {
-  const answers = puzzle.rounds.map((r) => r.radius);
-  const scores = guesses.map((g, i) => scoreGuess(g, answers[i]));
-  const totalScore = scores.reduce((a, b) => a + b, 0);
+export function buildDailyResult(date: string, puzzle: Puzzle, guesses: number[]): DailyResult {
   return {
     date,
+    radius: puzzle.radius,
     guesses,
-    answers,
-    scores,
-    totalScore,
-    averageScore: Math.round(totalScore / scores.length),
+    won: guesses.some((g) => g === puzzle.radius),
   };
 }
 
@@ -100,23 +88,21 @@ export function formatShareText(
   streak: number,
   siteUrl = "https://radius-wtf.netlify.app",
 ): string {
-  const grid = result.scores.map((s) => scoreBand(s).emoji).join("");
-  const lines = [
-    `Radius #${puzzle.dayIndex} — Avg Score: ${result.averageScore}/100`,
-    grid,
-    `🔥 Streak: ${streak}`,
-    siteUrl,
-  ];
+  const grid = result.guesses.map((g) => scoreBand(scoreGuess(g, result.radius)).emoji).join("");
+  const attempts = result.won ? `${result.guesses.length}/4` : "X/4";
+  const lines = [`Radius #${puzzle.dayIndex} ${attempts}`, grid, `🔥 Streak: ${streak}`, siteUrl];
   return lines.join("\n");
 }
 
 export function createInitialStats(): PlayerStats {
-  return { version: 1, lastPlayedDate: null, currentStreak: 0, maxStreak: 0, history: {} };
+  return { version: 2, lastPlayedDate: null, currentStreak: 0, maxStreak: 0, history: {} };
 }
 
 export function applyDailyResult(stats: PlayerStats, result: DailyResult): PlayerStats {
   const yesterday = previousDateString(result.date);
-  const nextStreak = stats.lastPlayedDate === yesterday ? stats.currentStreak + 1 : 1;
+  const priorWasConsecutiveWin =
+    stats.lastPlayedDate === yesterday && stats.history[yesterday]?.won === true;
+  const nextStreak = result.won ? (priorWasConsecutiveWin ? stats.currentStreak + 1 : 1) : 0;
   return {
     ...stats,
     lastPlayedDate: result.date,

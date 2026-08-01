@@ -1,18 +1,22 @@
 # radius.wtf
 
-A daily, no-login browser game in the spirit of [angle.wtf](https://angle.wtf/) — instead of
-guessing an angle, you guess a circle's **radius**, in abstract "game units," using a fixed
-scale-bar legend as your only reference. Five rounds a day, a Wordle-style emoji share grid, and
-a streak that resets on a UTC-midnight puzzle rollover.
+A daily, no-login browser game in the spirit of [angle.wtf](https://angle.wtf/) and Wordle —
+instead of guessing an angle or a word, you guess a circle's **radius**, in abstract "game units,"
+using a fixed scale-bar legend as your only reference. One circle a day, up to 4 numeric guesses
+with higher/lower feedback, a Wordle-style `X/4` emoji share grid, and a streak that only continues
+on consecutive daily wins.
 
 ## How it works
 
 - Everything renders in a fixed SVG `viewBox`, so all math happens in stable game units instead of
   raw pixels (see `src/lib/constants.ts`).
-- Each day's puzzle is generated deterministically from the UTC date (`src/lib/game.ts`), so every
-  player gets the same 5 radii.
-- Drag the dashed guess circle's handle (or type a number) to match the hidden circle's size, then
-  submit to reveal the true circle and your score (0–100, percent-error based).
+- Each day's puzzle (one circle) is generated deterministically from the UTC date
+  (`src/lib/game.ts`), so every player gets the same radius, and it rolls over to a new one at UTC
+  midnight.
+- The true circle is visible the whole time — there's no drag-to-match overlay, since that made
+  matching trivial by eye. You type a numeric radius guess; each guess shows a score band and a
+  "too high"/"too low" direction cue. You win by guessing the exact radius within
+  `MAX_GUESSES` (4) tries; running out of guesses reveals the answer.
 - Progress/streaks persist in `localStorage` only — no accounts yet. `src/lib/storage.ts` defines a
   `StatsStorage` interface so a future Supabase-backed adapter can be swapped in without touching
   game logic, once accounts are added.
