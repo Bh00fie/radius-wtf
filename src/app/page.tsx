@@ -27,8 +27,8 @@ export default function Home() {
   }
 
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col items-center gap-8 px-5 py-10">
-      <header className="flex w-full items-center justify-between border-b border-ink/10 pb-4">
+    <main className="mx-auto flex min-h-dvh w-full max-w-lg flex-col items-center gap-5 px-5 py-5 sm:py-8">
+      <header className="flex w-full items-center justify-between border-b border-ink/10 pb-3">
         <h1 className="flex items-center gap-3">
           <Hanko />
           <span className="font-serif text-xl font-bold tracking-wide">radiusgame</span>
@@ -45,11 +45,9 @@ export default function Home() {
         />
       ) : (
         <>
-          <p className="animate-rise max-w-xs text-center text-sm leading-relaxed text-ink/55">
-            {practiceMode
-              ? "Practice round — guess the radius of this test circle."
-              : `Guess the radius of today’s circle, in units, using the ruler as your reference.`}{" "}
-            You have {MAX_GUESSES} guesses.
+          <p className="animate-rise text-center text-sm text-ink/55">
+            {practiceMode ? "Practice round — guess" : "Guess"} the radius in units, using the ruler.{" "}
+            {MAX_GUESSES} tries.
           </p>
           <GuessPanel trueRadius={puzzle.radius} guesses={guesses} onGuess={submitGuess} />
         </>

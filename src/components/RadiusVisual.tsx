@@ -11,6 +11,7 @@ const MAX_TILT = 7;
 
 interface RadiusVisualProps {
   trueRadius: number;
+  className?: string;
   /** Brushes the circle in shu once the day's puzzle is over (won or out of guesses). */
   revealed?: boolean;
 }
@@ -21,11 +22,10 @@ interface RadiusVisualProps {
  * circle — visible from the first guess, since that's the thing being
  * estimated. There's no draggable overlay; the player states a number.
  *
- * The stage sits on a paper tile that settles in with a 3D tilt and follows a
- * mouse pointer slightly. The ruler and circle share one plane, so any tilt
+ * The stage settles in with a 3D tilt and follows a mouse pointer slightly. The ruler and circle share one plane, so any tilt
  * preserves their ratio.
  */
-export function RadiusVisual({ trueRadius, revealed }: RadiusVisualProps) {
+export function RadiusVisual({ trueRadius, revealed, className }: RadiusVisualProps) {
   const tileRef = useRef<HTMLDivElement>(null);
 
   const handleMove = (e: PointerEvent<HTMLDivElement>) => {
@@ -44,11 +44,11 @@ export function RadiusVisual({ trueRadius, revealed }: RadiusVisualProps) {
   const circumference = 2 * Math.PI * trueRadius;
 
   return (
-    <div className="scene w-full max-w-sm" onPointerMove={handleMove} onPointerLeave={handleLeave}>
+    <div className={`scene ${className ?? "w-full"}`} onPointerMove={handleMove} onPointerLeave={handleLeave}>
       <div className="animate-disc-settle preserve-3d">
         <div
           ref={tileRef}
-          className="preserve-3d relative aspect-square w-full rounded-sm border border-ink/10 bg-paper shadow-[0_30px_60px_-30px_rgb(0_0_0/0.35)] transition-transform duration-300 ease-out"
+          className="preserve-3d aspect-square w-full transition-transform duration-300 ease-out"
         >
           <svg
             viewBox={`0 0 ${VIEWBOX_SIZE} ${VIEWBOX_SIZE}`}
@@ -92,14 +92,6 @@ export function RadiusVisual({ trueRadius, revealed }: RadiusVisualProps) {
             />
             <circle cx={CENTER} cy={CENTER} r={1.75} className="fill-ink" />
           </svg>
-
-          {/* Floats a little above the tile so it parallaxes on tilt. */}
-          <span
-            aria-hidden
-            className="pointer-events-none absolute right-3 top-3 font-serif text-xs text-ink/30 [transform:translateZ(30px)]"
-          >
-            円
-          </span>
         </div>
       </div>
     </div>

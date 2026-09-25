@@ -38,7 +38,7 @@ export function AlreadyPlayedView({ puzzle, result, stats, practiceMode }: Alrea
   }, [practiceMode]);
 
   return (
-    <div className="flex w-full flex-col items-center gap-6">
+    <div className="flex w-full flex-col items-center gap-4">
       <DailySummary
         puzzle={puzzle}
         result={result}
