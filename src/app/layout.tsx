@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Shippori_Mincho } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { SITE_URL } from "@/lib/constants";
 import "./globals.css";
@@ -11,6 +11,12 @@ const geistSans = Geist({
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+const mincho = Shippori_Mincho({
+  variable: "--font-mincho",
+  weight: ["500", "700"],
   subsets: ["latin"],
 });
 
@@ -48,6 +54,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f3eee4" },
+    { media: "(prefers-color-scheme: dark)", color: "#161513" },
+  ],
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -76,7 +86,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${mincho.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         {children}

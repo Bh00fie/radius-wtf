@@ -40,15 +40,18 @@ export const LAUNCH_DATE = "2026-08-01";
 
 export interface ScoreBand {
   label: string;
-  /** Tailwind background-color class for the band's indicator dot. */
+  /**
+   * Tailwind classes for the band's indicator dot. The palette is ink + one
+   * shu accent, so bands step down from solid shu to an empty ink ring.
+   */
   color: string;
   min: number;
 }
 
 export const SCORE_BANDS: ScoreBand[] = [
-  { label: "Perfect", color: "bg-emerald-500", min: 90 },
-  { label: "Great", color: "bg-lime-500", min: 70 },
-  { label: "Good", color: "bg-amber-400", min: 45 },
-  { label: "Off", color: "bg-orange-500", min: 20 },
-  { label: "Way Off", color: "bg-red-500", min: 0 },
+  { label: "Perfect", color: "bg-shu", min: 90 },
+  { label: "Great", color: "bg-ink", min: 70 },
+  { label: "Good", color: "bg-ink/55", min: 45 },
+  { label: "Off", color: "bg-ink/20", min: 20 },
+  { label: "Way Off", color: "border border-ink/40", min: 0 },
 ];

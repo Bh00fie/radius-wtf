@@ -1,22 +1,30 @@
 @import "tailwindcss";
 
+/*
+ * Palette: washi paper, sumi ink, and a single shu (vermilion) accent.
+ * Everything else is an opacity of ink — no other hues.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --paper: #f3eee4;
+  --ink: #1d1c1a;
+  --shu: #c73e2a;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --paper: #161513;
+    --ink: #ebe5d9;
+    --shu: #e0573f;
   }
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-shu: var(--shu);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-mincho), "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
 }
 
 html,
@@ -26,7 +34,139 @@ body {
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--paper);
+  /* Faint radial light, like paper under a lamp. */
+  background-image: radial-gradient(
+    ellipse at 50% 30%,
+    color-mix(in srgb, var(--ink) 3%, transparent),
+    transparent 70%
+  );
+  background-attachment: fixed;
+  color: var(--ink);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--shu) 25%, transparent);
+}
+
+/* ---------- 3D motion ---------- */
+
+.scene {
+  perspective: 900px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+/* The stage settles in like a disc laid onto a table. */
+@keyframes disc-settle {
+  from {
+    opacity: 0;
+    transform: rotateX(62deg) translateZ(-60px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: rotateX(0) translateZ(0) scale(1);
+  }
+}
+
+/* Guess rows flip down from the top edge, like a hinged card. */
+@keyframes flip-down {
+  from {
+    opacity: 0;
+    transform: rotateX(-90deg);
+  }
+  to {
+    opacity: 1;
+    transform: rotateX(0);
+  }
+}
+
+/* Result card turns over to reveal the score. */
+@keyframes card-turn {
+  from {
+    opacity: 0;
+    transform: rotateY(-100deg);
+  }
+  to {
+    opacity: 1;
+    transform: rotateY(0);
+  }
+}
+
+/* Hanko seal pressed onto paper. */
+@keyframes stamp {
+  0% {
+    opacity: 0;
+    transform: translateZ(120px) rotate(-18deg) scale(1.6);
+  }
+  60% {
+    opacity: 1;
+    transform: translateZ(0) rotate(-6deg) scale(0.94);
+  }
+  100% {
+    opacity: 1;
+    transform: translateZ(0) rotate(-6deg) scale(1);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Revealed circle is drawn in with a single brush stroke. */
+@keyframes brush {
+  from {
+    stroke-dashoffset: var(--len);
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-disc-settle {
+  animation: disc-settle 900ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.animate-flip-down {
+  transform-origin: top center;
+  animation: flip-down 520ms cubic-bezier(0.3, 1.3, 0.5, 1) both;
+}
+.animate-card-turn {
+  animation: card-turn 800ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.animate-stamp {
+  animation: stamp 600ms cubic-bezier(0.3, 0.9, 0.3, 1) both;
+}
+.animate-rise {
+  animation: rise 600ms ease-out both;
+}
+.animate-brush {
+  animation: brush 1200ms cubic-bezier(0.6, 0, 0.3, 1) both;
+}
+
+/* Seal turns on its vertical axis on hover. */
+.hanko {
+  transition: transform 700ms cubic-bezier(0.3, 0.9, 0.3, 1);
+}
+.hanko:hover {
+  transform: rotateY(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 1ms !important;
+  }
 }

@@ -38,7 +38,7 @@ export function AlreadyPlayedView({ puzzle, result, stats, practiceMode }: Alrea
   }, [practiceMode]);
 
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex w-full flex-col items-center gap-6">
       <DailySummary
         puzzle={puzzle}
         result={result}
@@ -46,7 +46,12 @@ export function AlreadyPlayedView({ puzzle, result, stats, practiceMode }: Alrea
         practiceMode={practiceMode}
       />
       {remaining !== null && (
-        <p className="text-xs text-neutral-400">Next puzzle in {formatCountdown(remaining)}</p>
+        <p className="text-[11px] uppercase tracking-[0.25em] text-ink/40">
+          Next circle in{" "}
+          <span className="font-mono normal-case tracking-normal text-ink/70">
+            {formatCountdown(remaining)}
+          </span>
+        </p>
       )}
     </div>
   );

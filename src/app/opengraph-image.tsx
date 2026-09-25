@@ -14,7 +14,7 @@ export default function Image() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#fafafa",
+          backgroundColor: "#f3eee4",
         }}
       >
         <div
@@ -22,17 +22,17 @@ export default function Image() {
             width: 220,
             height: 220,
             borderRadius: "50%",
-            border: "6px solid #171717",
+            border: "6px solid #c73e2a",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             marginBottom: 40,
           }}
         >
-          <div style={{ width: 12, height: 12, borderRadius: "50%", backgroundColor: "#171717" }} />
+          <div style={{ width: 12, height: 12, borderRadius: "50%", backgroundColor: "#1d1c1a" }} />
         </div>
-        <div style={{ fontSize: 76, fontWeight: 700, color: "#171717" }}>radiusgame</div>
-        <div style={{ fontSize: 32, color: "#737373", marginTop: 16 }}>
+        <div style={{ fontSize: 76, fontWeight: 700, color: "#1d1c1a" }}>radiusgame</div>
+        <div style={{ fontSize: 32, color: "#8a8479", marginTop: 16 }}>
           Guess the radius. Daily.
         </div>
       </div>
