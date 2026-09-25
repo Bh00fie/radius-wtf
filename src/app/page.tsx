@@ -8,6 +8,9 @@ import { DebugPanel } from "@/components/DebugPanel";
 import { Hanko } from "@/components/Hanko";
 import { DEBUG_MODE, MAX_GUESSES } from "@/lib/constants";
 
+const MAIN_CLASS =
+  "mx-auto flex w-full max-w-lg flex-col items-center gap-5 px-5 py-5 sm:py-8";
+
 export default function Home() {
   const {
     loading,
@@ -22,19 +25,25 @@ export default function Home() {
     exitPracticeMode,
   } = useGamePuzzle();
 
+  const header = (
+    <header className="flex w-full items-center justify-between border-b border-ink/10 pb-3">
+      <h1 className="flex items-center gap-3">
+        <Hanko />
+        <span className="font-serif text-xl font-bold tracking-wide">radiusgame</span>
+      </h1>
+      <StreakBadge stats={stats} />
+    </header>
+  );
+
+  // The header needs no client state, so it's in the server HTML and paints
+  // before the game (which reads the local date and localStorage) hydrates.
   if (loading || !puzzle || !stats) {
-    return <main className="min-h-dvh" />;
+    return <main className={MAIN_CLASS}>{header}</main>;
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-lg flex-col items-center gap-5 px-5 py-5 sm:py-8">
-      <header className="flex w-full items-center justify-between border-b border-ink/10 pb-3">
-        <h1 className="flex items-center gap-3">
-          <Hanko />
-          <span className="font-serif text-xl font-bold tracking-wide">radiusgame</span>
-        </h1>
-        <StreakBadge stats={stats} />
-      </header>
+    <main className={MAIN_CLASS}>
+      {header}
 
       {gameOver && dailyResult ? (
         <AlreadyPlayedView

@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Shippori_Mincho } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { SITE_URL } from "@/lib/constants";
 import "./globals.css";
@@ -12,12 +13,23 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  // Only used for the end-of-game countdown — not worth a preload.
+  preload: false,
 });
 
-const mincho = Shippori_Mincho({
+// Shippori Mincho, subset to just the glyphs the game shows (Latin plus
+// 円 連 一 二 三 四 五 六 and a few symbols) — ~25 KB per weight, versus
+// ~120 unicode-range slices from Google Fonts. If new kanji/symbols are added
+// to the UI, regenerate these with fontTools' pyftsubset. License: OFL
+// (see ./fonts/ShipporiMincho-OFL.txt).
+const mincho = localFont({
   variable: "--font-mincho",
-  weight: ["500", "700"],
-  subsets: ["latin"],
+  src: [
+    { path: "./fonts/ShipporiMincho-Medium.subset.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/ShipporiMincho-Bold.subset.woff2", weight: "700", style: "normal" },
+  ],
+  display: "swap",
+  adjustFontFallback: "Times New Roman",
 });
 
 const TITLE = "radiusgame — guess the radius";
