@@ -27,7 +27,7 @@ export default function Home() {
   }
 
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-lg flex-col items-center gap-5 px-5 py-5 sm:py-8">
+    <main className="mx-auto flex w-full max-w-lg flex-col items-center gap-5 px-5 py-5 sm:py-8">
       <header className="flex w-full items-center justify-between border-b border-ink/10 pb-3">
         <h1 className="flex items-center gap-3">
           <Hanko />
