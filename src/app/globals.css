@@ -161,6 +161,13 @@ body {
   transform: rotateY(180deg);
 }
 
+/* On phones, drop the instructions while the keyboard is up to make room. */
+@media (pointer: coarse) {
+  main:has(input:focus) .hide-while-typing {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

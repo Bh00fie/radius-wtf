@@ -1,6 +1,7 @@
 "use client";
 
 import { useGamePuzzle } from "@/hooks/useGamePuzzle";
+import { useAppHeight } from "@/hooks/useAppHeight";
 import { StreakBadge } from "@/components/StreakBadge";
 import { GuessPanel } from "@/components/GuessPanel";
 import { AlreadyPlayedView } from "@/components/AlreadyPlayedView";
@@ -21,13 +22,14 @@ export default function Home() {
     startPracticePuzzle,
     exitPracticeMode,
   } = useGamePuzzle();
+  useAppHeight();
 
   if (loading || !puzzle || !stats) {
     return <main className="min-h-dvh" />;
   }
 
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-lg flex-col items-center gap-5 px-5 py-5 sm:py-8">
+    <main className="mx-auto flex min-h-[var(--app-height,100dvh)] w-full max-w-lg flex-col items-center gap-4 px-5 py-3 sm:gap-5 sm:py-8">
       <header className="flex w-full items-center justify-between border-b border-ink/10 pb-3">
         <h1 className="flex items-center gap-3">
           <Hanko />
@@ -45,7 +47,7 @@ export default function Home() {
         />
       ) : (
         <>
-          <p className="animate-rise text-center text-sm text-ink/55">
+          <p className="animate-rise hide-while-typing text-center text-sm text-ink/55">
             {practiceMode ? "Practice round — guess" : "Guess"} the radius in units, using the ruler.{" "}
             {MAX_GUESSES} tries.
           </p>

@@ -9,7 +9,7 @@ import { GUESS_MAX, GUESS_MIN, MAX_GUESSES } from "@/lib/constants";
  * Stage shrinks to leave room for the header, instructions and input row, so
  * the whole game fits on one screen without scrolling.
  */
-export const STAGE_SIZE = "min-w-0 flex-1 max-w-[max(11rem,calc(100dvh_-_16rem))]";
+export const STAGE_SIZE = "min-w-0 flex-1 max-w-[max(8rem,calc(var(--app-height,100dvh)_-_15rem))]";
 
 interface GuessPanelProps {
   trueRadius: number;
@@ -40,7 +40,7 @@ export function GuessPanel({ trueRadius, guesses, onGuess }: GuessPanelProps) {
   };
 
   return (
-    <div className="flex w-full flex-col items-center gap-5">
+    <div className="flex w-full flex-col items-center gap-4 sm:gap-5">
       <div className="flex w-full items-center justify-center gap-4 sm:gap-6">
         <RadiusVisual trueRadius={trueRadius} className={STAGE_SIZE} />
         <GuessList guesses={guesses} trueRadius={trueRadius} />
@@ -51,6 +51,8 @@ export function GuessPanel({ trueRadius, guesses, onGuess }: GuessPanelProps) {
           <input
             type="text"
             inputMode="numeric"
+            autoComplete="off"
+            enterKeyHint="go"
             pattern="[0-9]*"
             placeholder="—"
             aria-label="Radius guess in units"

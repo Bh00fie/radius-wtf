@@ -27,7 +27,7 @@ export function GuessList({ guesses, trueRadius }: GuessListProps) {
 
         if (g === undefined) {
           return (
-            <li key={i} className="flex h-10 items-center gap-2 border-b border-ink/10 text-ink/20">
+            <li key={i} className="flex h-8 items-center sm:h-10 gap-2 border-b border-ink/10 text-ink/20">
               {numeral}
               <span>—</span>
             </li>
@@ -39,7 +39,7 @@ export function GuessList({ guesses, trueRadius }: GuessListProps) {
         return (
           <li
             key={i}
-            className="animate-flip-down flex h-10 items-center gap-2 border-b border-ink/10 text-sm"
+            className="animate-flip-down flex h-8 items-center sm:h-10 gap-2 border-b border-ink/10 text-sm"
           >
             {numeral}
             <ScoreBandDot band={scoreBand(scoreGuess(g, trueRadius))} className="h-2.5 w-2.5" />
